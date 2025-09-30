@@ -299,7 +299,7 @@ function showConfirmModal(title, message, callback) {
 }
 
 /**
- * Soldaki kenar çubuğunu etkinleştir
+ * Soldaki kenar çubuğunu etkinleştir - Tüm sidebar davranışları burada
  */
 function initSidebar() {
     const sidebar = document.querySelector('.sidebar');
@@ -307,12 +307,29 @@ function initSidebar() {
     const sidebarToggle = document.querySelector('.sidebar-toggle');
     const mobileOverlay = document.querySelector('.mobile-overlay');
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const closeSidebarBtn = document.querySelector('.close-sidebar');
     
     if (!sidebar || !mainContent) return;
     
-    const isMobile = window.innerWidth < 768;
+    // Mobil menüyü açma fonksiyonu
+    function openMobileMenu() {
+        sidebar.classList.add('mobile-active');
+        if (mobileOverlay) {
+            mobileOverlay.classList.add('active');
+        }
+        document.body.style.overflow = 'hidden';
+    }
     
-    // Sidebar genişlik değişimi kontrolü (desktop)
+    // Mobil menüyü kapatma fonksiyonu
+    function closeMobileMenu() {
+        sidebar.classList.remove('mobile-active');
+        if (mobileOverlay) {
+            mobileOverlay.classList.remove('active');
+        }
+        document.body.style.overflow = '';
+    }
+    
+    // Desktop: Sidebar genişlik değişimi kontrolü
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
             sidebar.classList.toggle('sidebar-collapsed');
@@ -332,31 +349,31 @@ function initSidebar() {
         });
     }
     
-    // Mobil cihazlarda menü açma butonu
+    // Mobil: Menü açma butonu
     if (mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', function() {
-            sidebar.classList.add('mobile-active');
-            if (mobileOverlay) {
-                mobileOverlay.classList.add('active');
-            }
+            openMobileMenu();
         });
     }
     
-    // Mobil cihazlarda overlay tıklandığında
+    // Mobil: Kapatma butonu
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+    }
+    
+    // Mobil: Overlay tıklandığında kapat
     if (mobileOverlay) {
         mobileOverlay.addEventListener('click', function() {
-            sidebar.classList.remove('mobile-active');
-            mobileOverlay.classList.remove('active');
+            closeMobileMenu();
         });
     }
     
-    // Pencere boyutu değiştiğinde kontrol et
+    // Pencere boyutu değiştiğinde mobil menüyü kapat
     window.addEventListener('resize', function() {
         if (window.innerWidth >= 768 && sidebar.classList.contains('mobile-active')) {
-            sidebar.classList.remove('mobile-active');
-            if (mobileOverlay) {
-                mobileOverlay.classList.remove('active');
-            }
+            closeMobileMenu();
         }
     });
     
