@@ -6,7 +6,6 @@ from app.blueprints.ogrenci_yonetimi.models import Ogrenci
 from app.blueprints.ders_konu_yonetimi.models import Konu, Ders
 from app.blueprints.calisma_programi.models import DersProgrami, DersIlerleme, KonuTakip
 from app.blueprints.deneme_sinavlari.models import DenemeSonuc
-from app.utils.session import set_aktif_ogrenci, get_aktif_ogrenci, clear_aktif_ogrenci
 from app.blueprints.ogrenci_yonetimi.services import OgrenciService
 
 @ogrenci_yonetimi_bp.route('/')
@@ -230,9 +229,6 @@ def profil(ogrenci_id):
     """Öğrenci profil sayfası"""
     ogrenci = Ogrenci.query.get_or_404(ogrenci_id)
     
-    # Bu öğrenciyi aktif öğrenci olarak ayarla
-    set_aktif_ogrenci(ogrenci_id)
-    
     # Öğrencinin ders ilerlemeleri
     ders_ilerlemeleri = DersIlerleme.query.filter_by(ogrenci_id=ogrenci_id).all()
     
@@ -312,11 +308,6 @@ def sil(ogrenci_id):
     # Önce öğrenciyi çekelim
     ogrenci = Ogrenci.query.get_or_404(ogrenci_id)
     ogrenci_adi = f"{ogrenci.ad} {ogrenci.soyad}"
-    
-    # Eğer silinen öğrenci aktif öğrenci ise, aktif öğrenci bilgisini temizle
-    aktif_ogrenci = get_aktif_ogrenci()
-    if aktif_ogrenci and aktif_ogrenci.id == ogrenci_id:
-        clear_aktif_ogrenci()
     
     # Servis metodunu kullanarak tüm ilişkili verileri silme
     result = OgrenciService.delete_ogrenci(ogrenci_id)

@@ -10,7 +10,6 @@ from app.blueprints.etkinlik_kayit.services import EtkinlikService
 from app.blueprints.calisma_programi.services import CalismaService
 from app.blueprints.rapor_yonetimi.services import RaporService
 from app.utils.auth import session_required
-from app.utils.session import get_aktif_ogrenci
 from datetime import datetime, timedelta
 
 # Basit ana sayfa fonksiyonu - ileride kullanılabilir

@@ -37,12 +37,6 @@ def create_app(config=None):
     from app.utils.filters import register_filters
     register_filters(app)
     
-    # Register context processors
-    @app.context_processor
-    def inject_utilities():
-        from app.utils.session import get_aktif_ogrenci
-        return dict(get_aktif_ogrenci=get_aktif_ogrenci)
-    
     with app.app_context():
         # Import route modules BEFORE registering blueprints
         # to ensure routes are registered with the blueprint

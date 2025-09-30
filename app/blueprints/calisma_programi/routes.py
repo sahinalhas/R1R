@@ -8,7 +8,6 @@ from app.blueprints.ders_konu_yonetimi.models import Ders, Konu
 from app.blueprints.calisma_programi.models import DersProgrami, DersIlerleme, KonuTakip
 from app.utils.program import generate_weekly_schedule, calculate_topic_schedule
 from app.blueprints.calisma_programi.services import ProgramService
-from app.utils.session import set_aktif_ogrenci, get_aktif_ogrenci
 from app.utils.auth import session_required, log_activity
 from app.blueprints.calisma_programi import calisma_programi_bp
 
@@ -19,9 +18,6 @@ from app.blueprints.calisma_programi import calisma_programi_bp
 def haftalik_plan(ogrenci_id):
     """Öğrencinin haftalık ders planını görüntüleme ve düzenleme"""
     ogrenci = Ogrenci.query.get_or_404(ogrenci_id)
-    
-    # Mevcut aktif öğrenciyi oturumda ayarla
-    set_aktif_ogrenci(ogrenci_id)
     
     dersler = Ders.query.order_by(Ders.ad).all()
     
@@ -150,9 +146,6 @@ def haftalik_plan(ogrenci_id):
 def konu_plani(ogrenci_id):
     """Öğrencinin konu bazlı çalışma planını görüntüleme"""
     ogrenci = Ogrenci.query.get_or_404(ogrenci_id)
-    
-    # Mevcut aktif öğrenciyi oturumda ayarla
-    set_aktif_ogrenci(ogrenci_id)
     
     # Konu planını hesapla
     konu_plani_string = calculate_topic_schedule(ogrenci_id)

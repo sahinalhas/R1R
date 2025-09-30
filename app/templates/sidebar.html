@@ -96,8 +96,7 @@
                 </a>
             </li>
             
-            <!-- Öğrenci seçili değilse hızlı arama göster -->
-            {% if not get_aktif_ogrenci() %}
+            <!-- Öğrenci hızlı arama -->
             <li class="sidebar-nav-item search-container">
                 <div class="p-3">
                     <form id="ogrenciHizliAramaForm" action="{{ url_for('ogrenci_yonetimi.hizli_ara') }}" method="GET" class="d-flex flex-column">
@@ -111,7 +110,6 @@
                     </form>
                 </div>
             </li>
-            {% endif %}
         </ul>
     </div>
     

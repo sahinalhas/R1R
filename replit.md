@@ -4,6 +4,20 @@
 This is a Flask-based web application for tracking and managing student progress for the YKS (Higher Education Institutions Examination) in Turkey. The system serves as a comprehensive tool for guidance counselors to track academic progress, create study schedules, analyze performance data, and generate reports.
 
 ## Recent Changes (September 30, 2025)
+
+### Kod Yapısı Düzenleme ve Temizlik
+- **.gitignore oluşturuldu**: Python cache, database dosyaları, temp PDF'ler, backup dosyaları ignore edildi
+- **Backup dosyaları silindi**: routes.py.new, ogrenciler.html.backup kaldırıldı
+- **Temp klasörü temizlendi**: app/static/temp/ altındaki geçici PDF'ler silindi
+- **Aktif öğrenci sistemi kaldırıldı**: 
+  - Session-based aktif öğrenci takibi kaldırıldı, route'lar artık sadece URL parametresi ile çalışıyor
+  - `app/utils/session.py` temizlendi (set/get/clear_aktif_ogrenci fonksiyonları kaldırıldı)
+  - `app/utils/auth.py` basitleştirildi (decorator'lar minimal hale getirildi)
+  - Context processor kaldırıldı (`app/__init__.py`)
+  - Template'lerden aktif öğrenci referansları temizlendi
+  - Tüm blueprint'lerdeki import ve kullanımlar kaldırıldı
+
+### Önceki Değişiklikler
 - Successfully imported project from GitHub
 - Verified Python 3.11 environment with uv package manager
 - All dependencies working: Flask 3.1, SQLAlchemy 2.0, Gunicorn 23.0, WeasyPrint 65.0, ML libraries
@@ -11,7 +25,6 @@ This is a Flask-based web application for tracking and managing student progress
 - Deployment configured for autoscale target with Gunicorn
 - Application fully functional with existing SQLite database
 - Verified student management, homepage, and all features working
-- FullCalendar errors are handled gracefully by existing error handling script
 
 ## Project Structure
 - **app/**: Main application package with blueprints for different modules
