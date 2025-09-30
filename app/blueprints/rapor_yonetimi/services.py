@@ -251,15 +251,13 @@ class RaporService:
             
             # Geçici PDF dosya yolu
             pdf_filename = f"meb_faaliyet_raporu_{rapor_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-            static_temp_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'temp')
-            pdf_path = os.path.join(static_temp_dir, pdf_filename)
-            os.makedirs(static_temp_dir, exist_ok=True)
+            pdf_path = os.path.join(current_app.config["TEMP_FOLDER"], pdf_filename)
             
             # PDF oluştur
             weasyprint.HTML(string=html_content).write_pdf(pdf_path)
             
             # Dosya URL'i
-            pdf_url = url_for('static', filename=f"temp/{pdf_filename}")
+            pdf_url = url_for('ana_sayfa.download_temp_file', filename=pdf_filename)
             
             return {
                 'success': True,
@@ -817,14 +815,13 @@ class RaporService:
             
             # Geçici PDF dosya yolu
             pdf_filename = f"haftalik_plan_{ogrenci_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-            pdf_path = os.path.join('/home/runner/workspace/static/temp', pdf_filename)
-            os.makedirs('/home/runner/workspace/static/temp', exist_ok=True)
+            pdf_path = os.path.join(current_app.config["TEMP_FOLDER"], pdf_filename)
             
             # PDF oluştur
             weasyprint.HTML(string=html_content).write_pdf(pdf_path)
             
             # Dosya URL'i
-            pdf_url = url_for('static', filename=f"temp/{pdf_filename}")
+            pdf_url = url_for('ana_sayfa.download_temp_file', filename=pdf_filename)
             
             return {
                 'success': True,
@@ -895,14 +892,13 @@ class RaporService:
             
             # Geçici PDF dosya yolu
             pdf_filename = f"konu_plani_{ogrenci_id}_{ders_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-            pdf_path = os.path.join('/home/runner/workspace/static/temp', pdf_filename)
-            os.makedirs('/home/runner/workspace/static/temp', exist_ok=True)
+            pdf_path = os.path.join(current_app.config["TEMP_FOLDER"], pdf_filename)
             
             # PDF oluştur
             weasyprint.HTML(string=html_content).write_pdf(pdf_path)
             
             # Dosya URL'i
-            pdf_url = url_for('static', filename=f"temp/{pdf_filename}")
+            pdf_url = url_for('ana_sayfa.download_temp_file', filename=pdf_filename)
             
             return {
                 'success': True,
@@ -997,17 +993,13 @@ class RaporService:
             
             # Geçici PDF dosya yolu
             pdf_filename = f"ilerleme_raporu_{ogrenci_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-            # Uygulama kök dizininden itibaren static/temp yolunu kullan
-            static_temp_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'temp')
-            pdf_path = os.path.join(static_temp_dir, pdf_filename)
-            # Dizinin varlığından emin olalım
-            os.makedirs(static_temp_dir, exist_ok=True)
+            pdf_path = os.path.join(current_app.config["TEMP_FOLDER"], pdf_filename)
             
             # PDF oluştur
             weasyprint.HTML(string=html_content).write_pdf(pdf_path)
             
             # Dosya URL'i
-            pdf_url = url_for('static', filename=f"temp/{pdf_filename}")
+            pdf_url = url_for('ana_sayfa.download_temp_file', filename=pdf_filename)
             
             return {
                 'success': True,

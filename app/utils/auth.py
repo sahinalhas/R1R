@@ -3,7 +3,7 @@ Yetkilendirme ve oturum yönetimi işlevleri
 """
 
 from functools import wraps
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, jsonify, request
 from app.blueprints.ogrenci_yonetimi.models import Ogrenci
 
 def session_required(ogrenci_zorunlu=True):
@@ -82,3 +82,27 @@ def log_activity(activity_type, description=None):
             return result
         return decorated_function
     return decorator
+
+def api_auth_required(f):
+    """
+    API endpoint'leri için basit yetkilendirme dekoratörü
+    TODO: İleride gerçek API key veya token tabanlı auth eklenebilir
+    
+    Args:
+        f: Dekorlanacak API fonksiyonu
+        
+    Returns:
+        Wrapper fonksiyonu
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # TODO: API key veya token kontrolü yap
+        # Şu an için tüm isteklere izin veriyoruz
+        # İleride aşağıdaki gibi bir kontrol eklenebilir:
+        # api_key = request.headers.get('X-API-Key')
+        # if not api_key or not validate_api_key(api_key):
+        #     return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+        
+        return f(*args, **kwargs)
+    
+    return decorated_function

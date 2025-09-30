@@ -1,5 +1,6 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, send_file, current_app, abort
 from app.blueprints.ana_sayfa import ana_sayfa_bp
+import os
 from app.blueprints.ogrenci_yonetimi.models import Ogrenci
 from app.blueprints.ders_konu_yonetimi.models import Ders, Konu
 from app.blueprints.calisma_programi.models import DersIlerleme
@@ -63,3 +64,26 @@ def index():
                           ders_sayisi=ders_sayisi,
                           konu_sayisi=konu_sayisi,
                           ortalama_ilerleme=ortalama_ilerleme)
+
+@ana_sayfa_bp.route('/download/<filename>')
+def download_temp_file(filename):
+    """
+    Geçici dosyaları (PDF, Excel vb.) indirmek için endpoint
+    Dosyalar instance/tmp/ klasöründen serve edilir
+    """
+    try:
+        temp_folder = current_app.config.get("TEMP_FOLDER")
+        if not temp_folder:
+            abort(500, description="Temp folder not configured")
+        
+        file_path = os.path.join(temp_folder, filename)
+        
+        if not os.path.exists(file_path):
+            abort(404, description="File not found")
+        
+        if not os.path.abspath(file_path).startswith(os.path.abspath(temp_folder)):
+            abort(403, description="Access denied")
+        
+        return send_file(file_path, as_attachment=True)
+    except Exception as e:
+        abort(500, description=str(e))

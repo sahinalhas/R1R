@@ -5,7 +5,7 @@ Bu modül, rehberlik görüşme formu ile ilgili iş mantığı işlemlerini ger
 
 import os
 from datetime import datetime
-from flask import render_template, url_for
+from flask import render_template, url_for, current_app
 from app.extensions import db
 from app.blueprints.ogrenci_yonetimi.models import Ogrenci
 from app.blueprints.parametre_yonetimi.models import GorusmeKonusu, OkulBilgi
@@ -126,14 +126,13 @@ class GorusmeFormuService:
             
             # Geçici PDF dosya yolu
             pdf_filename = f"cagri_fisi_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-            pdf_path = os.path.join('app', 'static', 'temp', pdf_filename)
-            os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+            pdf_path = os.path.join(current_app.config["TEMP_FOLDER"], pdf_filename)
             
             # PDF oluştur
             weasyprint.HTML(string=html_content).write_pdf(pdf_path)
             
             # Dosya URL'i
-            pdf_url = url_for('static', filename=f"temp/{pdf_filename}")
+            pdf_url = url_for('ana_sayfa.download_temp_file', filename=pdf_filename)
             
             return {
                 'success': True,
@@ -257,14 +256,13 @@ class GorusmeFormuService:
             
             # Geçici PDF dosya yolu
             pdf_filename = f"gorusme_fisi_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-            pdf_path = os.path.join('app', 'static', 'temp', pdf_filename)
-            os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+            pdf_path = os.path.join(current_app.config["TEMP_FOLDER"], pdf_filename)
             
             # PDF oluştur
             weasyprint.HTML(string=html_content).write_pdf(pdf_path)
             
             # Dosya URL'i
-            pdf_url = url_for('static', filename=f"temp/{pdf_filename}")
+            pdf_url = url_for('ana_sayfa.download_temp_file', filename=pdf_filename)
             
             return {
                 'success': True,

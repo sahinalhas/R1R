@@ -13,7 +13,14 @@ def create_app(config=None):
                 static_folder='static')
     
     # Configure the app
-    app.secret_key = os.environ.get("SESSION_SECRET", "yks-calisma-takip-sistemi-gizli-anahtar")
+    # Secret key for session management - MUST be set in production
+    secret_key = os.environ.get("SESSION_SECRET")
+    if not secret_key:
+        # Generate a random key for development (not for production!)
+        import secrets
+        secret_key = secrets.token_hex(32)
+        logging.warning("SESSION_SECRET not set! Using temporary random key (development only)")
+    app.secret_key = secret_key
     
     # Database configuration
     # Use PostgreSQL in production, SQLite in development
@@ -23,12 +30,18 @@ def create_app(config=None):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
         app.config["SQLALCHEMY_DATABASE_URI"] = database_url
     else:
-        # Use SQLite in a subdirectory of app
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        db_path = os.path.join(basedir, 'database', 'yks_takip.db')
+        # Use SQLite in instance folder (outside of source code)
+        instance_path = os.path.join(os.getcwd(), 'instance')
+        os.makedirs(instance_path, exist_ok=True)
+        db_path = os.path.join(instance_path, 'yks_takip.db')
         app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
     
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    
+    # Configure temporary file directory (outside of source code)
+    tmp_path = os.path.join(os.getcwd(), 'instance', 'tmp')
+    os.makedirs(tmp_path, exist_ok=True)
+    app.config["TEMP_FOLDER"] = tmp_path
     
     # Initialize extensions
     db.init_app(app)
@@ -52,6 +65,7 @@ def create_app(config=None):
         from app.blueprints.etkinlik_kayit import routes, etkinlik_kayit_bp
         from app.blueprints.anket_yonetimi import routes, anket_yonetimi_bp
         from app.blueprints.yapay_zeka_asistan import routes, yapay_zeka_asistan_bp
+        from app.api import routes, api_bp
         
         # Register blueprints
         app.register_blueprint(ana_sayfa_bp)
@@ -66,6 +80,7 @@ def create_app(config=None):
         app.register_blueprint(etkinlik_kayit_bp, url_prefix='/etkinlik-kayit')
         app.register_blueprint(anket_yonetimi_bp, url_prefix='/anket-yonetimi')
         app.register_blueprint(yapay_zeka_asistan_bp, url_prefix='/yapay-zeka-asistan')
+        app.register_blueprint(api_bp)
         
         # Import models for database table creation
         from app.extensions import Base
