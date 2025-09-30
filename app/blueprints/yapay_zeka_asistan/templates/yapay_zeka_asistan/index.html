@@ -113,9 +113,6 @@
                                     <td>{{ model.olusturma_tarihi|format_date }}</td>
                                     <td>
                                         <a href="{{ url_for('yapay_zeka_asistan.model_detay', model_id=model.id) }}" class="btn btn-sm btn-info">Detay</a>
-                                        {% if get_aktif_ogrenci() and model.aktif %}
-                                        <a href="{{ url_for('yapay_zeka_asistan.ogrenci_analiz_yap', ogrenci_id=get_aktif_ogrenci().id) }}" class="btn btn-sm btn-primary">Analiz Et</a>
-                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
