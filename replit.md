@@ -5,10 +5,19 @@ This is a Flask-based web application for tracking and managing student progress
 
 ## Recent Changes (September 30, 2025)
 
+### Dosya Organizasyonu İyileştirmesi (Production-Ready)
+- **Database konumu değişti**: SQLite database artık `instance/yks_takip.db` içinde (kaynak kod dışında)
+- **Güvenlik iyileştirmesi**: SESSION_SECRET hard-coded değer yerine environment variable kullanıyor (dev için random key + warning)
+- **Geçici dosya yönetimi**: 
+  - Geçici dosyalar artık `instance/tmp/` klasöründe (kaynak kod dışında)
+  - Tüm PDF/Excel oluşturma fonksiyonları `current_app.config["TEMP_FOLDER"]` kullanıyor
+  - `/download/<filename>` endpoint'i eklendi (güvenli PDF indirme)
+- **API Blueprint**: API endpoints artık düzgün şekilde kaydedildi ve kullanıma hazır
+- **Auth iyileştirmesi**: `api_auth_required` decorator eklendi (gelecekte token/key auth için hazır)
+
 ### Kod Yapısı Düzenleme ve Temizlik
 - **.gitignore oluşturuldu**: Python cache, database dosyaları, temp PDF'ler, backup dosyaları ignore edildi
 - **Backup dosyaları silindi**: routes.py.new, ogrenciler.html.backup kaldırıldı
-- **Temp klasörü temizlendi**: app/static/temp/ altındaki geçici PDF'ler silindi
 - **Aktif öğrenci sistemi kaldırıldı**: 
   - Session-based aktif öğrenci takibi kaldırıldı, route'lar artık sadece URL parametresi ile çalışıyor
   - `app/utils/session.py` temizlendi (set/get/clear_aktif_ogrenci fonksiyonları kaldırıldı)
@@ -29,10 +38,13 @@ This is a Flask-based web application for tracking and managing student progress
 ## Project Structure
 - **app/**: Main application package with blueprints for different modules
   - **blueprints/**: Modular components (student management, scheduling, reports, etc.)
+    - **api/**: RESTful API endpoints
   - **static/**: CSS, JavaScript, and other static files
   - **templates/**: Jinja2 HTML templates
-  - **database/**: SQLite database file (yks_takip.db)
   - **utils/**: Helper functions and utilities
+- **instance/**: Application data (outside source code, gitignored)
+  - **yks_takip.db**: SQLite database file
+  - **tmp/**: Temporary files (PDFs, exports)
 - **main.py**: Application entry point
 - **pyproject.toml**: Python dependencies configuration
 - **uv.lock**: Dependency lock file
