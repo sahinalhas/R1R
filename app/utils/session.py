@@ -29,4 +29,9 @@ def get_aktif_ogrenci():
     return None
 
 
-# Aktif öğrenciyi temizleme fonksiyonu kaldırıldı
+def clear_aktif_ogrenci():
+    """
+    Aktif öğrenci seçimini temizle.
+    """
+    if 'aktif_ogrenci_id' in session:
+        session.pop('aktif_ogrenci_id')

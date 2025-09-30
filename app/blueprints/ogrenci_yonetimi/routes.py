@@ -6,7 +6,7 @@ from app.blueprints.ogrenci_yonetimi.models import Ogrenci
 from app.blueprints.ders_konu_yonetimi.models import Konu, Ders
 from app.blueprints.calisma_programi.models import DersProgrami, DersIlerleme, KonuTakip
 from app.blueprints.deneme_sinavlari.models import DenemeSonuc
-from app.utils.session import set_aktif_ogrenci, get_aktif_ogrenci
+from app.utils.session import set_aktif_ogrenci, get_aktif_ogrenci, clear_aktif_ogrenci
 from app.blueprints.ogrenci_yonetimi.services import OgrenciService
 
 @ogrenci_yonetimi_bp.route('/')
